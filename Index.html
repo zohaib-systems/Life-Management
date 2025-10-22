@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Life Management OS</title>
+  <link rel="stylesheet" href="Css/index.css"/>
+  <!-- SEO Essentials -->
+  <meta name="description" content="Life Management OS helps you track goals, habits, deadlines, expenses, and net worth in one clean dashboard.">
+  <meta name="robots" content="index, follow">
+  <!-- Replace SITE_URL with your production URL -->
+  <link rel="canonical" href="http://localhost/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Life Management OS">
+  <meta property="og:description" content="Track goals, habits, deadlines, expenses, and net worth in one dashboard.">
+  <meta property="og:url" content="http://localhost/">
+  <meta property="og:image" content="http://localhost/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Life Management OS">
+  <meta name="twitter:description" content="Track goals, habits, deadlines, expenses, and net worth in one dashboard.">
+  <meta name="twitter:image" content="http://localhost/og-image.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Life Management OS",
+    "url": "http://localhost/",
+    "applicationCategory": "Productivity",
+    "description": "Life Management OS helps you track goals, habits, deadlines, expenses, and net worth in one clean dashboard.",
+    "inLanguage": "en"
+  }
+  </script>
+</head>
+<body>
+  <!-- Access Lock Overlay -->
+  <div id="lockOverlay" aria-hidden="true" style="display:none;">
+    <div class="lock-card" role="dialog" aria-labelledby="lockTitle" aria-modal="true">
+      <h2 id="lockTitle">Secure Access</h2>
+      <p id="lockDesc">Set a PIN on first use, then enter it next time to unlock.</p>
+      <form id="pinForm">
+        <div id="setPinFields" class="pin-fields" style="display:none;">
+          <input type="password" id="newPin" name="newPin" minlength="4" placeholder="Set PIN (min 4)" autocomplete="new-password" required />
+          <input type="password" id="confirmPin" name="confirmPin" minlength="4" placeholder="Confirm PIN" autocomplete="new-password" required />
+          <button type="submit">Save PIN & Unlock</button>
+        </div>
+        <div id="enterPinFields" class="pin-fields" style="display:none;">
+          <input type="password" id="enterPin" name="enterPin" minlength="4" placeholder="Enter PIN" autocomplete="current-password" required />
+          <button type="submit">Unlock</button>
+        </div>
+        <div id="pinMsg" class="pin-msg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <!-- Top row -->
+    <div class="box" id="net-worth">
+      <h3>Net Worth</h3>
+      <div class="value" id="netWorthValue">PKR 0</div>
+    </div>
+
+    <div class="box" id="goal-timer">
+      <h3>Live Goal Timer</h3>
+      <div class="value" id="nextDeadline">—</div>
+      <div id="planTimers"></div>
+    </div>
+
+    <div class="box" id="plan">
+      <h2>One Page Plan</h2>
+      <form id="planForm">
+        <div class="row">
+          <div style="flex:1">
+            <label for="longTermGoal"><strong>Long-term Goal</strong></label>
+            <input type="text" id="longTermGoal" placeholder="e.g. Become financially independent" />
+            <input type="date" id="longTermDate" />
+            <input type="text" id="longTermPurpose" placeholder="Purpose of long-term goal" />
+          </div>
+          <div style="flex:1">
+            <label for="midTermGoal"><strong>Mid-term Goal</strong></label>
+            <input type="text" id="midTermGoal" placeholder="e.g. Buy a house" />
+            <input type="date" id="midTermDate" />
+            <input type="text" id="midTermPurpose" placeholder="Purpose of mid-term goal" />
+          </div>
+          <div style="flex:1">
+            <label for="shortTermGoal"><strong>Short-term Goal</strong></label>
+            <input type="text" id="shortTermGoal" placeholder="e.g. Save 1 lakh" />
+            <input type="date" id="shortTermDate" />
+            <input type="text" id="shortTermPurpose" placeholder="Purpose of short-term goal" />
+          </div>
+        </div>
+        <button id="savePlanBtn" type="submit">Save Plan</button>
+      </form>
+      <ul id="planGoals"></ul>
+    </div>
+<div class="box" id="goal-dashboard">
+  <h2>Goal Dashboard</h2>
+  <div id="goalDashboardContent"></div>
+</div>
+
+
+    <!-- Skills section -->
+    <div class="box" id="skills">
+      <h3>Skills</h3>
+      <div class="row">
+        <input type="text" id="skillName" placeholder="Skill (e.g., JavaScript)" />
+        <select id="skillCategory">
+          <option value="">Category</option>
+          <option value="technical">Technical</option>
+          <option value="soft">Soft</option>
+          <option value="language">Language</option>
+          <option value="tool">Tool</option>
+        </select>
+        <select id="skillLevel">
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate" selected>Intermediate</option>
+          <option value="Advanced">Advanced</option>
+          <option value="Expert">Expert</option>
+        </select>
+        <button id="addSkillBtn">Add</button>
+      </div>
+      <ul id="skillsList"></ul>
+    </div>
+
+
+    <!-- Middle left stack -->
+    <div class="box" id="expense-tracker">
+      <h3>Expense Tracker</h3>
+      <div class="row">
+        <input type="text" id="expenseName" placeholder="Expense name"/>
+        <input type="number" id="expenseAmount" placeholder="Amount"/>
+        <button id="addExpenseBtn">Add</button>
+      </div>
+      <ul id="expenseList"></ul>
+      <div class="total">
+        <span><strong>Total:</strong></span>
+        <span id="expenseTotal">PKR 0</span>
+      </div>
+    </div>
+
+    <div class="box" id="income-tracker">
+      <h3>Income, Assets & Debts</h3>
+      <div class="row">
+        <input type="text" id="entryName" placeholder="Entry name (e.g. Salary, House, Loan)"/>
+        <input type="number" id="entryAmount" placeholder="Amount"/>
+        <select id="entryType">
+          <option value="income">Income (Salary, Business, Freelance)</option>
+          <option value="passive">Passive Income (Dividends, Rent,)</option>
+          <option value="asset">Asset (Property, Savings, Investments)</option>
+          <option value="debt">Debt/Liability (Loans, Credit Cards, Mortgages)</option>
+        </select>
+        <select id="entryCategory">
+          <option value="">Category</option>
+          <option value="salary">Salary</option>
+          <option value="business">Business</option>
+          <option value="freelance">Freelance</option>
+          <option value="dividends">Dividends</option>
+          <option value="rent">Rent</option>
+          <option value="interest">Interest</option>
+          <option value="property">Property</option>
+          <option value="savings">Savings</option>
+          <option value="investments">Investments</option>
+          <option value="loan">Loan</option>
+          <option value="creditcard">Credit Card</option>
+          <option value="mortgage">Mortgage</option>
+        </select>
+        <button id="addEntryBtn">Add</button>
+      </div>
+      <ul id="entryList"></ul>
+      <div class="totals">
+        <div><strong>Income:</strong> <span id="incomeTotal">PKR 0</span></div>
+        <div><strong>Passive Income:</strong> <span id="passiveTotal">PKR 0</span></div>
+        <div><strong>Assets:</strong> <span id="assetTotal">PKR 0</span></div>
+        <div><strong>Debts/Liabilities:</strong> <span id="debtTotal">PKR 0</span></div>
+      </div>
+    </div>
+
+    <div class="box" id="wealth-level">
+      <h3>Wealth Level</h3>
+      <div class="value" id="wealthLevelValue">Level 0</div>
+      <div id="wealthLevelLabel" style="font-weight:600;margin-top:4px;color:#3b82f6;"></div>
+      <div id="wealthLevelDesc" style="font-size:14px;color:#64748b;margin:6px 0;"></div>
+      <div id="wealthLevelGoal" style="font-size:13px;color:#10b981;"></div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="box" id="deadlines-table">
+      <h3>Deadlines</h3>
+      <div class="row">
+        <input type="text" id="deadlineName" placeholder="Deadline name"/>
+        <input type="date" id="deadlineDate"/>
+        <button id="addDeadlineBtn">Add</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Timer</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="deadlineRows"></tbody>
+      </table>
+    </div>
+
+    <div class="box" id="habit-tracker">
+      <div class="row">
+  <input type="text" id="habitName" placeholder="New habit (e.g., Exercise)" />
+  <select id="habitGoal">
+    <option value="independent">Independent (not linked)</option>
+  </select>
+  <button id="addHabitBtn">Add Habit</button>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Habit</th>
+      <th>Linked Goal</th>
+      <th>Stage</th>
+      <th>Progress</th>
+      <th>Update</th>
+    </tr>
+  </thead>
+  <tbody id="habitTable"></tbody>
+</table>
+
+
+      </div>
+      <!-- <div class="row">
+        <input type="number" id="habitIncrement" placeholder="Add days"/>
+        <button id="habitAddBtn">Update</button>
+      </div>
+    </div>
+  </div> -->
+
+      <!-- Backup & Restore -->
+      <div class="box" id="backup">
+        <h3>Backup & Restore</h3>
+        <div class="row">
+          <button id="exportBtn">Export Data</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none" />
+          <button id="importBtn">Import Data</button>
+        </div>
+        <div id="backupMsg" style="font-size:13px;color:#64748b;margin-top:6px;"></div>
+      </div>
+
+  <script src="JS/index.js"></script>
+</body>
+</html>
