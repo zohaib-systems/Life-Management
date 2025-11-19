@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Replace with your production domain
-Sitemap: http://localhost/sitemap.xml
+Sitemap: https://zohaib-systems.github.io/Life-Management/sitemap.xml
